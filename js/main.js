@@ -20,6 +20,7 @@ class Player {
     this.airplaneImg.style.height = this.height + "vh";
     this.airplaneImg.style.left = this.positionX + "vw";
     this.airplaneImg.style.bottom = this.positionY + "vh";
+    this.airplaneImg.style.zIndex = "100";
 
     //append to the dom
     const board = document.getElementById("board");
@@ -48,9 +49,6 @@ class Obstacle {
   constructor(positionX, imageAttribut) {
     this.width = 7;
     this.height = 7;
-    // this.positionX = Math.random() * (60 - 20) + 20;
-    // this.positionX = Math.floor(Math.random() * 16); // grass left
-    // this.positionX = Math.floor(Math.random() * (95 - 80) + 80); // grass right
     this.positionX = positionX;
     this.positionY = 100;
 
@@ -65,11 +63,9 @@ class Obstacle {
 
     // create dom element
     this.domElement = document.createElement("img");
-    // this.domElement.setAttribute("src", "./images/submarine.svg"); // submarine
     this.domElement.setAttribute("src", imageAttribut); // tree
 
     // set id
-    // this.domElement.className = "obstacle submarine";
     this.domElement.className = "obstacle tree";
     this.domElement.style.width = this.width + "vw";
     this.domElement.style.height = this.height + "vh";
@@ -96,24 +92,30 @@ const player = new Player();
 document.addEventListener("keydown", (event) => {
   if (event.key === "ArrowLeft" && player.positionX >= 0) {
     player.moveLeft();
+    petrolBoard.decreaseFuel();
   } else if (
     event.key === "ArrowRight" &&
     player.positionX < 100 - player.width
   ) {
     player.moveRight();
+    petrolBoard.decreaseFuel();
   } else if (
     event.key === "ArrowUp" &&
     player.positionY <= 100 - player.width
   ) {
     player.moveUp();
+    petrolBoard.decreaseFuel();
   } else if (event.key === "ArrowDown" && player.positionY > 0) {
     // buck: player can go to the northpool
     player.moveDown();
+    petrolBoard.decreaseFuel();
   }
 });
 
 const dangerousObstaclesArray = []; // submarine, halicopter
-const notDangerousObstaclesArray = []; // trees, buildings, fuel
+const notDangerousObstaclesArrayLeft = []; // trees, buildings
+const notDangerousObstaclesArrayRight = []; // trees, buildingsl
+const fuelArray = []; // fuel
 
 // create dangerous obstacles
 setInterval(() => {
@@ -123,24 +125,35 @@ setInterval(() => {
   dangerousObstaclesArray.push(newObstacleRiver);
 }, 5000);
 
-//create NOT dangerous obstacles
+//create NOT dangerous obstacles Left
 setInterval(() => {
-  const positionXRight = Math.floor(Math.random() * (95 - 80) + 80);
   const positionXLeft = Math.floor(Math.random() * 16);
 
-  const imageAttributArray = [
-    "./images/tree.svg",
-    "./images/trees.svg",
-    "./images/factory.svg",
-  ];
+  const imageAttributArray = ["./images/tree.svg", "./images/trees.svg"];
+  const imageAttribut =
+    imageAttributArray[Math.floor(Math.random() * imageAttributArray.length)];
+  const newObstacleLeft = new Obstacle(positionXLeft, imageAttribut);
+  notDangerousObstaclesArrayLeft.push(newObstacleLeft);
+}, 5500);
 
+//create NOT dangerous obstacles Right
+setInterval(() => {
+  const positionXRight = Math.floor(Math.random() * (95 - 80) + 80);
+
+  const imageAttributArray = ["./images/tree.svg", "./images/trees.svg"];
   const imageAttribut =
     imageAttributArray[Math.floor(Math.random() * imageAttributArray.length)];
   const newObstacleRighr = new Obstacle(positionXRight, imageAttribut);
-  const newObstacleLeft = new Obstacle(positionXLeft, imageAttribut);
-
-  notDangerousObstaclesArray.push(newObstacleRighr, newObstacleLeft);
+  notDangerousObstaclesArrayRight.push(newObstacleRighr);
 }, 4500);
+
+// create fuel
+setInterval(() => {
+  const positionXRiver = Math.floor(Math.random() * (60 - 20) + 20);
+  const imageAttributFuel = `/images/gas-station.svg`;
+  const newObstacleRiver = new Obstacle(positionXRiver, imageAttributFuel);
+  fuelArray.push(newObstacleRiver);
+}, 10000);
 
 // move dangerous obstacles
 setInterval(() => {
@@ -149,7 +162,7 @@ setInterval(() => {
     if (obstacleInstance.positionY > -10) {
       obstacleInstance.moveDown();
     }
-    if (obstacleInstance.positionY < 0 - obstacleInstance.height) {
+    if (obstacleInstance.positionY < 0) {
       obstacleInstance.domElement.remove(); //remove from the dom
       dangerousObstaclesArray.shift(); // remove from the array
       // points += 10; // does not work
@@ -168,16 +181,102 @@ setInterval(() => {
   });
 }, 100);
 
-// move NOT dangerous obstacles
+// move NOT dangerous obstacles Left
 setInterval(() => {
   let points = 0;
-  notDangerousObstaclesArray.forEach((obstacleInstance) => {
+  notDangerousObstaclesArrayLeft.forEach((obstacleInstance) => {
     if (obstacleInstance.positionY > -10) {
       obstacleInstance.moveDown();
     }
-    if (obstacleInstance.positionY < 0 - obstacleInstance.height) {
+    if (obstacleInstance.positionY < 0) {
       obstacleInstance.domElement.remove(); //remove from the dom
-      notDangerousObstaclesArray.shift(); // remove from the array
+      notDangerousObstaclesArrayLeft.shift(); // remove from the array
     }
   });
 }, 100);
+
+// move NOT dangerous obstacles Right
+setInterval(() => {
+  let points = 0;
+  notDangerousObstaclesArrayRight.forEach((obstacleInstance) => {
+    if (obstacleInstance.positionY > -10) {
+      obstacleInstance.moveDown();
+    }
+    if (obstacleInstance.positionY < 0) {
+      obstacleInstance.domElement.remove(); //remove from the dom
+      notDangerousObstaclesArrayRight.shift(); // remove from the array
+    }
+  });
+}, 100);
+let fuelLevel = 0;
+
+// move fuel
+setInterval(() => {
+  fuelArray.forEach((obstacleInstance) => {
+    if (obstacleInstance.positionY > -10) {
+      obstacleInstance.moveDown();
+    }
+    if (obstacleInstance.positionY < 0) {
+      obstacleInstance.domElement.remove(); //remove from the dom
+      fuelArray.shift(); // remove from the array
+    }
+    if (
+      player.positionX < obstacleInstance.positionX + obstacleInstance.width &&
+      player.positionX + player.width > obstacleInstance.positionX &&
+      player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
+      player.positionY + player.height > obstacleInstance.positionY
+    ) {
+      // Collision detected!
+      petrolBoard.increaseFuel();
+    }
+  });
+}, 100);
+
+// event =  keydown
+document.addEventListener("keydown", (event) => {
+  if (event.code === "Space") {
+    console.log("Space pressed");
+  }
+});
+
+class Fuel {
+  constructor() {
+    this.width = 50;
+    this.height = 100;
+    this.positionX = 0;
+    this.domElement = null;
+    this.createDomeElement();
+  }
+
+  createDomeElement() {
+    this.domElement = document.createElement("div");
+
+    this.domElement.id = "fuel-pointer";
+    this.domElement.style.backgroundColor = "#d3ae5c";
+    this.domElement.style.width = this.width + "%";
+    this.domElement.style.height = this.height + "%";
+    this.domElement.style.left = this.positionX + "%";
+    this.domElement.style.top = this.positionY + "%";
+
+    const fuelContainer = document.getElementById("fuel-container");
+    fuelContainer.appendChild(this.domElement);
+  }
+
+  decreaseFuel() {
+    if (this.width < 10) {
+      this.domElement.style.backgroundColor = "tomato";
+    } else {
+      this.domElement.style.backgroundColor = "#d3ae5c";
+    }
+    this.width -= 0.3;
+    this.domElement.style.width = this.width + "%";
+  }
+  increaseFuel() {
+    if (this.width < 100) {
+      this.width++;
+      this.domElement.style.width = this.width + "%";
+    }
+  }
+}
+
+const petrolBoard = new Fuel(fuelLevel);

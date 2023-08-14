@@ -26,8 +26,28 @@ body {
   height: 20vh;
   background-color: #45454a;
   border-top: solid 2px rgb(27, 26, 26);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
 }
 
 #airplane {
   position: absolute;
+}
+
+#fuel-container {
+  width: 25vw;
+  height: 7vh;
+  border: black solid 3px;
+}
+
+#points-table {
+  color: #d3ae5c;
+  font-size: 4vw;
+}
+
+#fuel-pointer {
+  position: relative;
 }
