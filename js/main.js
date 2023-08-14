@@ -43,6 +43,31 @@ class Player {
     this.positionY++;
     this.airplaneImg.style.bottom = this.positionY + "vw";
   }
+
+  shoot() {
+    const bullet = document.createElement("div");
+    bullet.className = "bullet";
+
+    // Set the initial position of the bullet
+    bullet.style.left = this.positionX + this.width / 2 + "vw";
+    bullet.style.bottom = this.positionY + this.height + "vh";
+
+    // Append the bullet to the DOM
+    const board = document.getElementById("board");
+    board.appendChild(bullet);
+
+    // Move the bullet upwards with an interval
+    const bulletInterval = setInterval(() => {
+      const bulletTop = parseFloat(bullet.style.bottom);
+      bullet.style.bottom = bulletTop + 1 + "vh";
+
+      // Check if the bullet is out of the screen
+      if (bulletTop >= 100) {
+        clearInterval(bulletInterval);
+        board.removeChild(bullet);
+      }
+    }, 10);
+  }
 }
 
 class Obstacle {
@@ -82,11 +107,6 @@ class Obstacle {
   }
 }
 
-class ObstaclesOnTheGrass extends Obstacle {
-  constructor() {
-    super();
-  }
-}
 const player = new Player();
 
 document.addEventListener("keydown", (event) => {
@@ -109,6 +129,12 @@ document.addEventListener("keydown", (event) => {
     // buck: player can go to the northpool
     player.moveDown();
     petrolBoard.decreaseFuel();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === " ") {
+    player.shoot();
   }
 });
 
@@ -231,13 +257,6 @@ setInterval(() => {
     }
   });
 }, 100);
-
-// event =  keydown
-document.addEventListener("keydown", (event) => {
-  if (event.code === "Space") {
-    console.log("Space pressed");
-  }
-});
 
 class Fuel {
   constructor() {
