@@ -5,6 +5,7 @@ class Player {
     this.positionX = 50 - this.width / 2;
     this.positionY = 0;
     this.airplaneImg = null;
+    this.obstacleCount = 0;
 
     this.createAirplane();
   }
@@ -43,6 +44,12 @@ class Player {
     this.positionY++;
     this.airplaneImg.style.bottom = this.positionY + "vw";
   }
+  // count points for removed obstacle and display it
+  increaseObstacleCount() {
+    this.obstacleCount++;
+    const pointsTable = document.getElementById("points-table");
+    pointsTable.textContent = this.obstacleCount;
+  }
 
   shoot() {
     const bullet = document.createElement("div");
@@ -63,18 +70,19 @@ class Player {
 
       // Check for collisions with obstacles
       const obstacles = document.querySelectorAll(".obstacle");
-
+      let countExplosion = 0;
       obstacles.forEach((obstacle) => {
         if (checkCollision(bullet, obstacle)) {
           clearInterval(bulletInterval);
           board.removeChild(bullet);
           board.removeChild(obstacle);
+          this.increaseObstacleCount();
 
           // Create explosion SVG
           const explosion = document.createElement("img");
           explosion.setAttribute("src", "./images/explosion.svg");
           explosion.className = "explosion";
-          console.log(explosion);
+
           // Set the position of the explosion
           const explosionLeft = parseFloat(obstacle.style.left);
           const explosionTop = parseFloat(obstacle.style.bottom);
@@ -83,6 +91,8 @@ class Player {
 
           // Append the explosion to the DOM
           board.appendChild(explosion);
+
+          // count explosion
 
           // Remove the explosion after a delay
           setTimeout(() => {
@@ -97,6 +107,7 @@ class Player {
         board.removeChild(bullet);
       }
     }, 10);
+    console.log(this.obstacleCount);
   }
 }
 
