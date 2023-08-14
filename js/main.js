@@ -61,6 +61,36 @@ class Player {
       const bulletTop = parseFloat(bullet.style.bottom);
       bullet.style.bottom = bulletTop + 1 + "vh";
 
+      // Check for collisions with obstacles
+      const obstacles = document.querySelectorAll(".obstacle");
+
+      obstacles.forEach((obstacle) => {
+        if (checkCollision(bullet, obstacle)) {
+          clearInterval(bulletInterval);
+          board.removeChild(bullet);
+          board.removeChild(obstacle);
+
+          // Create explosion SVG
+          const explosion = document.createElement("img");
+          explosion.setAttribute("src", "./images/explosion.svg");
+          explosion.className = "explosion";
+          console.log(explosion);
+          // Set the position of the explosion
+          const explosionLeft = parseFloat(obstacle.style.left);
+          const explosionTop = parseFloat(obstacle.style.bottom);
+          explosion.style.left = explosionLeft + "vw";
+          explosion.style.bottom = explosionTop + "vh";
+
+          // Append the explosion to the DOM
+          board.appendChild(explosion);
+
+          // Remove the explosion after a delay
+          setTimeout(() => {
+            board.removeChild(explosion);
+          }, 1000);
+        }
+      });
+
       // Check if the bullet is out of the screen
       if (bulletTop >= 100) {
         clearInterval(bulletInterval);
@@ -287,7 +317,7 @@ class Fuel {
     } else {
       this.domElement.style.backgroundColor = "#d3ae5c";
     }
-    this.width -= 0.3;
+    this.width -= 0.2;
     this.domElement.style.width = this.width + "%";
   }
   increaseFuel() {
@@ -299,3 +329,15 @@ class Fuel {
 }
 
 const petrolBoard = new Fuel(fuelLevel);
+
+// Function to check collision between two elements
+function checkCollision(elem1, elem2) {
+  const rect1 = elem1.getBoundingClientRect();
+  const rect2 = elem2.getBoundingClientRect();
+  return (
+    rect1.left < rect2.right &&
+    rect1.right > rect2.left &&
+    rect1.top < rect2.bottom &&
+    rect1.bottom > rect2.top
+  );
+}

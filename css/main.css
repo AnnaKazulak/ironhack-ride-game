@@ -21,6 +21,11 @@ body {
 .obstacle {
   position: absolute;
 }
+.explosion {
+  position: absolute;
+  height: 8vh;
+  width: 8w0 h;
+}
 
 #points-board {
   height: 20vh;
