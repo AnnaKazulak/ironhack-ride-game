@@ -137,6 +137,10 @@ class Obstacle {
     this.domElement.style.height = this.height + "vh";
     this.domElement.style.left = this.positionX + "vw";
     this.domElement.style.bottom = this.positionY + "vh";
+    this.domElement.style.transform = "scaleX(-1)";
+    if (this.positionX > 50) {
+      this.domElement.style.transform = "scaleX(1)";
+    }
 
     //append to the dom
     const parentElm = document.getElementById("board");
@@ -145,6 +149,14 @@ class Obstacle {
   moveDown() {
     this.positionY -= this.speedY;
     this.domElement.style.bottom = this.positionY + "vh";
+  }
+  moveLeft() {
+    this.positionX--;
+    this.domElement.style.left = this.positionX + "vw";
+  }
+  moveRight() {
+    this.positionX++;
+    this.domElement.style.left = this.positionX + "vw";
   }
 }
 
@@ -179,16 +191,23 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-const dangerousObstaclesArray = []; // submarine, halicopter
+const dangerousObstaclesArray = []; // submarine, shippr
 const notDangerousObstaclesArrayLeft = []; // trees, buildings
 const notDangerousObstaclesArrayRight = []; // trees, buildingsl
+const dangerousObstaclesArrayRight = []; // fight-jet, helicopter
 const fuelArray = []; // fuel
 
 // create dangerous obstacles
 setInterval(() => {
   const positionXRiver = Math.random() * (60 - 20) + 20;
-  const imageAttributSubmarine = `/images/submarine.svg`;
-  const newObstacleRiver = new Obstacle(positionXRiver, imageAttributSubmarine);
+  const imageAttributArray = [
+    `/images/submarine-right.svg`,
+    `/images/ship-right.svg`,
+  ];
+  const imageAttribut =
+    imageAttributArray[Math.floor(Math.random() * imageAttributArray.length)];
+
+  const newObstacleRiver = new Obstacle(positionXRiver, imageAttribut);
   dangerousObstaclesArray.push(newObstacleRiver);
 }, 5000);
 
@@ -222,13 +241,28 @@ setInterval(() => {
   fuelArray.push(newObstacleRiver);
 }, 10000);
 
-// move dangerous obstacles
+// move dangerous obstacles River
 setInterval(() => {
   let points = 0;
   dangerousObstaclesArray.forEach((obstacleInstance) => {
     if (obstacleInstance.positionY > -10) {
       obstacleInstance.moveDown();
     }
+
+    if (obstacleInstance.positionY < 50 && obstacleInstance.positionX > 50) {
+      obstacleInstance.moveRight();
+      if (obstacleInstance.positionX > 80 - obstacleInstance.width) {
+        obstacleInstance.moveLeft();
+      }
+    }
+
+    if (obstacleInstance.positionY < 50 && obstacleInstance.positionX < 50) {
+      obstacleInstance.moveLeft();
+      if (obstacleInstance.positionX < 20) {
+        obstacleInstance.moveRight();
+      }
+    }
+
     if (obstacleInstance.positionY < 0) {
       obstacleInstance.domElement.remove(); //remove from the dom
       dangerousObstaclesArray.shift(); // remove from the array
