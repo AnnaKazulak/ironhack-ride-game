@@ -63,3 +63,31 @@ body {
   background-color: wheat;
   position: absolute;
 }
+
+#game-over {
+  background-color: tomato;
+  height: 300px;
+  width: 600px;
+}
+
+/* -------------game over page-------------- */
+
+#board-gameover {
+  background-color: #009005;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#text-game-over {
+  font-weight: 700;
+  font-size: 80px;
+}
+
+#link-game-over {
+  color: #0040e8;
+  font-size: 50px;
+  a
+}

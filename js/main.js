@@ -70,7 +70,7 @@ class Player {
 
       // Check for collisions with obstacles
       const obstacles = document.querySelectorAll(".obstacle");
-      let countExplosion = 0;
+
       obstacles.forEach((obstacle) => {
         if (checkCollision(bullet, obstacle)) {
           clearInterval(bulletInterval);
@@ -107,7 +107,6 @@ class Player {
         board.removeChild(bullet);
       }
     }, 10);
-    console.log(this.obstacleCount);
   }
 }
 
@@ -243,7 +242,6 @@ setInterval(() => {
 
 // move dangerous obstacles River
 setInterval(() => {
-  let points = 0;
   dangerousObstaclesArray.forEach((obstacleInstance) => {
     if (obstacleInstance.positionY > -10) {
       obstacleInstance.moveDown();
@@ -266,9 +264,8 @@ setInterval(() => {
     if (obstacleInstance.positionY < 0) {
       obstacleInstance.domElement.remove(); //remove from the dom
       dangerousObstaclesArray.shift(); // remove from the array
-      // points += 10; // does not work
-      // console.log("points:", points);
     }
+
     if (
       player.positionX < obstacleInstance.positionX + obstacleInstance.width &&
       player.positionX + player.width > obstacleInstance.positionX &&
