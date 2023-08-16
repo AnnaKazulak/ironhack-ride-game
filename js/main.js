@@ -128,7 +128,7 @@ class Obstacle {
 
     // create dom element
     this.domElement = document.createElement("img");
-    this.domElement.setAttribute("src", imageAttribut); // tree
+    this.domElement.setAttribute("src", imageAttribut);
 
     // set id
     this.domElement.className = "obstacle tree";
@@ -200,8 +200,8 @@ const fuelArray = []; // fuel
 setInterval(() => {
   const positionXRiver = Math.random() * (60 - 20) + 20;
   const imageAttributArray = [
-    `/images/submarine-right.svg`,
-    `/images/ship-right.svg`,
+    "./images/submarine-right.svg",
+    "./images/ship-right.svg",
   ];
   const imageAttribut =
     imageAttributArray[Math.floor(Math.random() * imageAttributArray.length)];
