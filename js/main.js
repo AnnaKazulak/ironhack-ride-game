@@ -235,7 +235,7 @@ setInterval(() => {
 // create fuel
 setInterval(() => {
   const positionXRiver = Math.floor(Math.random() * (60 - 20) + 20);
-  const imageAttributFuel = `/images/gas-station.svg`;
+  const imageAttributFuel = "./images/gas-station.svg";
   const newObstacleRiver = new Obstacle(positionXRiver, imageAttributFuel);
   fuelArray.push(newObstacleRiver);
 }, 10000);
