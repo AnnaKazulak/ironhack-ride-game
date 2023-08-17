@@ -151,7 +151,9 @@ class Fuel {
   }
 
   decreaseFuel() {
-    if (this.width < 10) {
+    if (this.width < 1) {
+      location.href = "./gameover.html";
+    } else if (this.width < 10) {
       this.domElement.style.backgroundColor = "tomato";
     } else {
       this.domElement.style.backgroundColor = "#d3ae5c";

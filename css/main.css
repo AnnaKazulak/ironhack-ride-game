@@ -2,6 +2,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  font-family: "Press Start 2P", "Arial";
 }
 
 #board {
@@ -64,13 +65,7 @@ body {
   position: absolute;
 }
 
-#game-over {
-  background-color: tomato;
-  height: 300px;
-  width: 600px;
-}
-
-/* -------------game over page-------------- */
+/* ------welcome and game over page-------------- */
 
 #board-gameover {
   background-color: #009005;
@@ -93,4 +88,13 @@ body {
 
 #game-over-table {
   position: relative;
+}
+
+#text-game-welcome {
+  font-size: 47px;
+}
+
+#link-game-welcome {
+  color: #0040e8;
+  font-size: 40px;
 }
