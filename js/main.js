@@ -133,13 +133,12 @@ class Fuel {
     this.height = 100;
     this.positionX = 0;
     this.domElement = null;
-    this.createDomeElement();
+    this.createDomElement();
   }
 
-  createDomeElement() {
+  createDomElement() {
     this.domElement = document.createElement("div");
 
-    this.domElement.id = "fuel-pointer";
     this.domElement.style.backgroundColor = "#d3ae5c";
     this.domElement.style.width = this.width + "%";
     this.domElement.style.height = this.height + "%";
@@ -158,7 +157,7 @@ class Fuel {
     } else {
       this.domElement.style.backgroundColor = "#d3ae5c";
     }
-    this.width -= 0.2;
+    this.width -= 0.1;
     this.domElement.style.width = this.width + "%";
   }
   increaseFuel() {
@@ -177,6 +176,8 @@ const fuelArray = []; // fuel
 const bulletsArray = []; // bulets
 let fuelLevel = 0;
 let obstacleCount = 0;
+
+let obstacleCountStr = obstacleCount.toString();
 
 const dangerousObstacleInterval = 5000;
 const leftObstacleInterval = 5500;
@@ -258,9 +259,10 @@ function createBullestArray() {
 // count points for removed obstacle and display it
 function increaseObstacleCount() {
   obstacleCount++;
-  console.log(obstacleCount);
+  console.log("obstacleCount", obstacleCount);
   const pointsTable = document.getElementById("points-table");
   pointsTable.textContent = obstacleCount;
+  localStorage.setItem("playerScore", obstacleCount);
 }
 
 function moveObstacles(obstacleArray, collisionCallback) {

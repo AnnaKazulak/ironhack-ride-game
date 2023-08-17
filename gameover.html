@@ -14,8 +14,17 @@
     <div id="board-gameover">
       <div id="river-gameover">
         <div id="text-game-over">Game Over</div>
+        <div id="scoreDisplay">0</div>
         <a id="link-game-over" href="./index.html">Play again</a>
       </div>
     </div>
+    <script>
+      let storedScore = localStorage.getItem("playerScore");
+      let scoreDisplay = document.getElementById("scoreDisplay");
+      if (localStorage) {
+        scoreDisplay.textContent = "Your Score: " + storedScore;
+      }
+      console.log(storedScore);
+    </script>
   </body>
 </html>
