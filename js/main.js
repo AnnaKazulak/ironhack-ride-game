@@ -197,6 +197,11 @@ const dangerousImageAttributArray = [
   "./images/submarine-right.svg",
   "./images/ship-right.svg",
 ];
+
+const dangerousImageAttributArrayRight = [
+  "./images/fighter-jet.svg",
+  // "./images/helicopter-right.svg",
+];
 const fuelImageAttribut = "./images/gas-station.svg";
 
 // create obstacles
@@ -223,6 +228,13 @@ createObstacles(
   dangerousPositionXRange,
   dangerousImageAttributArray,
   dangerousObstaclesArray
+);
+// new dangerous obstacles
+createObstacles(
+  6000,
+  rightPositionXRange,
+  dangerousImageAttributArrayRight,
+  dangerousObstaclesArrayRight
 );
 createObstacles(
   leftObstacleInterval,
@@ -321,6 +333,30 @@ function moveNotDangerousObstacles(obstaclesArray) {
         obstaclesArray.shift(); // remove from the array
       }
     });
+  }, 100);
+}
+
+// move dangerous obstacles Right
+function moveDangerousObstaclesArrayRight() {
+  setInterval(() => {
+    dangerousObstaclesArrayRight.forEach(
+      (obstacleInstance, obstacleInstanceIndex, arr) => {
+        if (obstacleInstance.positionY > -10) {
+          obstacleInstance.moveDown();
+        }
+
+        if (obstacleInstance.positionY < 60) {
+          obstacleInstance.moveLeft();
+        }
+
+        if (obstacleInstance.positionY < 0) {
+          obstacleInstance.domElement.remove(); //remove from the dom
+          dangerousObstaclesArray.shift(); // remove from the array
+        }
+        checkCollision(player, dangerousObstaclesArrayRight);
+        collisionWithBullets(obstacleInstance, obstacleInstanceIndex, arr);
+      }
+    );
   }, 100);
 }
 
@@ -477,6 +513,7 @@ function playGameOverSound() {
 moveNotDangerousObstacles(notDangerousObstaclesArrayRight);
 moveNotDangerousObstacles(notDangerousObstaclesArrayLeft);
 moveDangerousObstacleRiver(dangerousObstaclesArray);
+moveDangerousObstaclesArrayRight(dangerousObstaclesArrayRight);
 moveFuel(fuelArray);
 createBullestArray();
 const player = new Player();
