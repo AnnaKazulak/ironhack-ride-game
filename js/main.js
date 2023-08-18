@@ -1,7 +1,7 @@
 class Player {
   constructor() {
     this.height = 8;
-    this.width = 8;
+    this.width = 3.5;
     this.positionX = 50 - this.width / 2;
     this.positionY = 0;
     this.airplaneImg = null;
@@ -198,10 +198,7 @@ const dangerousImageAttributArray = [
   "./images/ship-right.svg",
 ];
 
-const dangerousImageAttributArrayRight = [
-  "./images/fighter-jet.svg",
-  // "./images/helicopter-right.svg",
-];
+const dangerousImageAttributArrayRight = ["./images/fighter-jet.svg"];
 const fuelImageAttribut = "./images/gas-station.svg";
 
 // create obstacles
@@ -231,7 +228,7 @@ createObstacles(
 );
 // new dangerous obstacles
 createObstacles(
-  6000,
+  9000,
   rightPositionXRange,
   dangerousImageAttributArrayRight,
   dangerousObstaclesArrayRight
@@ -311,10 +308,10 @@ function collisionWithBullets(obstacleInstance, obstIndex, obstArr) {
       bulletInstance.positionY + bulletInstance.height >
         obstacleInstance.positionY
     ) {
-      bulletsArray.splice(i, 1); // remove from array
       bulletInstance.bullet.remove(); // remove from DOM
-      obstArr.splice(obstIndex, 1);
+      bulletsArray.splice(i, 1); // remove from array
       obstacleInstance.domElement.remove();
+      obstArr.splice(obstIndex, 1);
       makeExplosion(obstacleInstance);
       increaseObstacleCount();
     }
@@ -351,7 +348,7 @@ function moveDangerousObstaclesArrayRight() {
 
         if (obstacleInstance.positionY < 0) {
           obstacleInstance.domElement.remove(); //remove from the dom
-          dangerousObstaclesArray.shift(); // remove from the array
+          dangerousObstaclesArrayRight.shift(); // remove from the array
         }
         checkCollision(player, dangerousObstaclesArrayRight);
         collisionWithBullets(obstacleInstance, obstacleInstanceIndex, arr);
@@ -360,7 +357,7 @@ function moveDangerousObstaclesArrayRight() {
   }, 100);
 }
 
-// move dangerous obstacles River
+// Move dangerous obstacles in the River
 function moveDangerousObstacleRiver() {
   setInterval(() => {
     dangerousObstaclesArray.forEach(
@@ -369,30 +366,25 @@ function moveDangerousObstacleRiver() {
           obstacleInstance.moveDown();
         }
 
-        if (
-          obstacleInstance.positionY < 50 &&
-          obstacleInstance.positionX > 50
-        ) {
-          obstacleInstance.moveRight();
-          if (obstacleInstance.positionX > 80 - obstacleInstance.width) {
-            obstacleInstance.moveLeft();
-          }
-        }
-
-        if (
-          obstacleInstance.positionY < 50 &&
-          obstacleInstance.positionX < 50
-        ) {
-          obstacleInstance.moveLeft();
-          if (obstacleInstance.positionX < 20) {
+        if (obstacleInstance.positionY < 50) {
+          if (obstacleInstance.positionX > 50) {
             obstacleInstance.moveRight();
+            if (obstacleInstance.positionX > 80 - obstacleInstance.width) {
+              obstacleInstance.moveLeft();
+            }
+          } else {
+            obstacleInstance.moveLeft();
+            if (obstacleInstance.positionX < 20) {
+              obstacleInstance.moveRight();
+            }
           }
         }
 
         if (obstacleInstance.positionY < 0) {
-          obstacleInstance.domElement.remove(); //remove from the dom
-          dangerousObstaclesArray.shift(); // remove from the array
+          obstacleInstance.domElement.remove(); // Remove from the DOM
+          dangerousObstaclesArray.shift(); // Remove from the array
         }
+
         checkCollision(player, dangerousObstaclesArray);
         collisionWithBullets(obstacleInstance, obstacleInstanceIndex, arr);
       }
@@ -436,10 +428,10 @@ function checkCollision(player, obstaclesArr) {
       player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
       player.positionY + player.height > obstacleInstance.positionY
     ) {
+      obstacleInstance.domElement.remove();
       arr.splice(i, 1);
       console.log("game over!");
       location.href = "./gameover.html";
-      obstacleInstance.domElement.remove();
       playGameOverSound();
     }
   });
